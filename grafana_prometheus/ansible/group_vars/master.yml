@@ -1,6 +1,7 @@
 kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
 monitoring_namespace: monitoring
-storage_class: nfs-csi-grafana
+storage_class_grafana: nfs-csi-grafana
+storage_class_prometheus: nfs-csi-prometheus
 grafana_domain: containers.sunny.lab
 
 prometheus_storage: 5Gi
