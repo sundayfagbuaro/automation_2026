@@ -1,2 +1,0 @@
-[ontap_clusters]
-ontap-dev ansible_host=10.10.1.221 ansible_user=auto_admin ansible_password=Encrypt

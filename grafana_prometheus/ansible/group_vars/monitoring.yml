@@ -1,0 +1,15 @@
+monitoring_namespace: monitoring
+storage_class: nfs-csi-grafana
+grafana_domain: containers.sunny.lab
+
+prometheus_storage: 5Gi
+grafana_storage: 5Gi
+#alertmanager_storage: 5Gi
+
+prometheus_retention: 15d
+
+grafana_admin_password: "P@ssWord1"
+#alert_email: "admin@example.com"
+#smtp_host: "smtp.example.com:587"
+#smtp_user: "admin@example.com"
+#smtp_pass: "smtp-password"

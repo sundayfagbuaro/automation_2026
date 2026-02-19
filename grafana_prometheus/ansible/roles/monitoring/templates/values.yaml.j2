@@ -1,0 +1,30 @@
+prometheus:
+  prometheusSpec:
+    retention: {{ prometheus_retention }}
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: {{ storage_class }}
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: {{ prometheus_storage }}
+
+
+grafana:
+  adminPassword: "{{ grafana_admin_password }}"
+
+  persistence:
+    enabled: true
+    storageClassName: {{ storage_class }}
+    accessModes:
+      - ReadWriteOnce
+    size: {{ grafana_storage }}
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - {{ grafana_domain }}
+    path: /
+    pathType: Prefix
