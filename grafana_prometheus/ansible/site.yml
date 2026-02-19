@@ -1,6 +1,7 @@
 ---
 - hosts: master
   gather_facts: no
+  become: yes
   environment:
     KUBECONFIG: /home/bobosunne/.kube/ansible-kubeconfig
   roles:
