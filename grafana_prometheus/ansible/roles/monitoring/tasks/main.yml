@@ -4,9 +4,13 @@
     name: prometheus-community
     repo_url: https://prometheus-community.github.io/helm-charts
 
-- name: Debug monitoring_namespace
+- name: Debug variables
   debug:
-    var: monitoring_namespace
+    msg:
+      - "Namespace: {{ monitoring_namespace }}"
+      - "StorageClass: {{ storage_class }}"
+      - "Kubeconfig: {{ kubeconfig_path }}"
+  delegate_to: localhost
 
 - name: Create monitoring namespace
   kubernetes.core.k8s:
@@ -23,11 +27,23 @@
     src: values.yaml.j2
     dest: /tmp/monitoring-values.yaml
 
+- name: Create monitoring namespace
+  kubernetes.core.k8s:
+    api_version: v1
+    kind: Namespace
+    name: "{{ monitoring_namespace }}"
+    state: present
+    kubeconfig: "{{ kubeconfig_path }}"
+  delegate_to: localhost
+
 - name: Deploy kube-prometheus-stack
   kubernetes.core.helm:
-    name: kube-prometheus-stack
+    name: "{{ prometheus_helm_release }}"
     chart_ref: prometheus-community/kube-prometheus-stack
     release_namespace: "{{ monitoring_namespace }}"
+    create_namespace: false
     values_files:
-      - /tmp/monitoring-values.yaml
+      - "{{ prometheus_values_file }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     state: present
+  delegate_to: localhost
