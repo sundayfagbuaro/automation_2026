@@ -4,6 +4,10 @@
     name: prometheus-community
     repo_url: https://prometheus-community.github.io/helm-charts
 
+- name: Debug monitoring_namespace
+  debug:
+    var: monitoring_namespace
+
 - name: Create monitoring namespace
   kubernetes.core.k8s:
     api_version: v1
