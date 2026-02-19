@@ -1,3 +1,4 @@
+kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
 monitoring_namespace: monitoring
 storage_class: nfs-csi-grafana
 grafana_domain: containers.sunny.lab
