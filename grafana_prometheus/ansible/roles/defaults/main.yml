@@ -13,3 +13,10 @@ grafana_storage: 5Gi
 prometheus_retention: 15d
 
 grafana_admin_password: "P@ssWord1"
+
+# roles/monitoring/defaults/main.yml
+#monitoring_namespace: monitoring
+#storage_class: nfs-csi-grafana
+#kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
+#prometheus_helm_release: kube-prometheus-stack
+prometheus_values_file: "{{ role_path }}/templates/values.yaml.j2"
