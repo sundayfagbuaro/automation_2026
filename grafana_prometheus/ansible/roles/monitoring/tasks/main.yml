@@ -25,6 +25,14 @@
     kubeconfig: "{{ kubeconfig_path }}"
   delegate_to: localhost
 
+- name: Render Helm values file
+  template:
+    src: values.yaml.j2
+    dest: /tmp/kube-prometheus-values.yaml
+  delegate_to: localhost
+  become: no
+
+
 - name: Deploy kube-prometheus-stack
   kubernetes.core.helm:
     name: "{{ prometheus_helm_release }}"
