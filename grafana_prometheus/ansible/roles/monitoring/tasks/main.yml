@@ -14,6 +14,7 @@
       - "Namespace: {{ monitoring_namespace }}"
       - "StorageClass: {{ storage_class }}"
       - "Kubeconfig: {{ kubeconfig_path }}"
+      - "retention: {{ prometheus_retention }}"
   delegate_to: localhost
 
 - name: Create monitoring namespace
@@ -32,7 +33,6 @@
   delegate_to: localhost
   become: no
 
-
 - name: Deploy kube-prometheus-stack
   kubernetes.core.helm:
     name: "{{ prometheus_helm_release }}"
@@ -40,7 +40,8 @@
     release_namespace: "{{ monitoring_namespace }}"
     create_namespace: false
     values_files:
-      - "{{ prometheus_values_file }}"
+      - /tmp/kube-prometheus-values.yaml
     kubeconfig: "{{ kubeconfig_path }}"
     state: present
   delegate_to: localhost
+  become: no

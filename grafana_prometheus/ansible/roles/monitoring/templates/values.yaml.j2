@@ -1,6 +1,6 @@
 prometheus:
   prometheusSpec:
-    retention: {{ prometheus_retention }}
+    retention: {{ prometheus_retention | default('10d') }}
     storageSpec:
       volumeClaimTemplate:
         spec:
