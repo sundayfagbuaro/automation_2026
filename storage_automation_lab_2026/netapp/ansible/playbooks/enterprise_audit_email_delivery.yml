@@ -1,0 +1,48 @@
+---
+- name: Enterprise ONTAP Audit, HTML Dashboard, and Email Delivery
+  hosts: ontap_clusters
+  gather_facts: no
+  collections:
+    - netapp.ontap
+    - community.general
+
+  vars:
+    svm_csv: "ontap_audit_config.csv"
+    snapmirror_csv: "ontap_snapmirror_config.csv"
+    html_report_file: "ontap_audit_dashboard.html"
+
+    # Email settings
+    email_from: "ontap.audit@company.com"
+    email_to: "manager@company.com,team@company.com"
+    email_subject: "ONTAP Audit Dashboard"
+    smtp_host: "smtp.company.com"
+    smtp_port: 587
+    smtp_user: "ontap.audit@company.com"
+    smtp_password: "YourSMTPPassword"  # Use Ansible Vault for production
+
+    naming_prefixes:
+      svm: "svm_"
+      volume: "vol_"
+      lun: "lun_"
+      cifs: "share_"
+
+  tasks:
+
+    # --- Step 1: Generate HTML Dashboard ---
+    - name: Include previous audit/dashboard tasks
+      include_tasks: enterprise_audit_dashboard_colour_coded.yml
+
+    # --- Step 2: Send Email with HTML Dashboard ---
+    - name: Send HTML dashboard via email
+      mail:
+        host: "{{ smtp_host }}"
+        port: "{{ smtp_port }}"
+        username: "{{ smtp_user }}"
+        password: "{{ smtp_password }}"
+        to: "{{ email_to }}"
+        from: "{{ email_from }}"
+        subject: "{{ email_subject }}"
+        body: "Dear Team,\n\nPlease find the latest ONTAP audit dashboard attached.\n\nRegards,\nAutomation"
+        attach:
+          - "{{ html_report_file }}"
+        secure: starttls

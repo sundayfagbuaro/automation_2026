@@ -1,0 +1,8 @@
+roles/*
+!roles/requirements.yml
+collections/*
+!collections/requirements.yml
+.vene/
+env/
+.cache/
+*.retry
