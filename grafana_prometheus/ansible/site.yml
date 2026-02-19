@@ -2,8 +2,10 @@
 - hosts: master
   gather_facts: no
   become: yes
-  environment:
-    KUBECONFIG: /home/bobosunne/.kube/ansible-kubeconfig
   roles:
-    - monitoring
-
+    - role: monitoring
+      vars:
+        kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
+  tasks:
+    - name: All Kubernetes tasks on Ansible host
+      delegate_to: localhost
