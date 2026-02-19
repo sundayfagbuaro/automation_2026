@@ -19,7 +19,7 @@
     name: "{{ monitoring_namespace }}"
     state: present
     kubeconfig: /home/bobosunne/.kube/ansible-kubeconfig
-  delegate_to: localhost
+ # delegate_to: localhost
 
 
 - name: Template values.yaml
