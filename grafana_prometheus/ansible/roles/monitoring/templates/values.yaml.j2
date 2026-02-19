@@ -4,7 +4,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: {{ storage_class }}
+          storageClassName: {{ storage_class_prometheus }}
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -16,7 +16,7 @@ grafana:
 
   persistence:
     enabled: true
-    storageClassName: {{ storage_class }}
+    storageClassName: {{ storage_class_grafana }}
     accessModes:
       - ReadWriteOnce
     size: {{ grafana_storage }}

@@ -1,5 +1,6 @@
 monitoring_namespace: monitoring
-storage_class: nfs-csi-grafana
+storage_class_grafana: nfs-csi-grafana
+storage_class_prometheus: nfs-csi-prometheus
 kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
 prometheus_helm_release: kube-prometheus-stack
 prometheus_values_file: "{{ role_path }}/templates/values.yaml.j2"
