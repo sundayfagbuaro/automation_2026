@@ -2,7 +2,7 @@ monitoring_namespace: monitoring
 storage_class: nfs-csi-grafana
 kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
 prometheus_helm_release: kube-prometheus-stack
-prometheus_values_file: "{{ playbook_dir }}/roles/monitoring/templates/values.yaml.j2"
+prometheus_values_file: "roles/monitoring/templates/values.yaml.j2"
 
 grafana_domain: containers.sunny.lab
 
