@@ -6,3 +6,4 @@
     KUBECONFIG: /home/bobosunne/.kube/ansible-kubeconfig
   roles:
     - monitoring
+
