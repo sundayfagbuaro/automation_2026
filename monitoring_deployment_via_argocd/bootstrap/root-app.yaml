@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cluster-root
-  namespace: argocd-monitoring
+  namespace: argocd
 spec:
   project: default
   source:
@@ -11,7 +11,7 @@ spec:
     path: apps
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd-monitoring
+    namespace: monitoring-argocd
   syncPolicy:
     automated:
       prune: true
