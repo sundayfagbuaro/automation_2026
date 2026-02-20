@@ -12,7 +12,7 @@
   debug:
     msg:
       - "Namespace: {{ monitoring_namespace }}"
-#      - "StorageClass: {{ storage_class }}"
+      - "StorageClass: {{ storage_class_grafana }}"
       - "Kubeconfig: {{ kubeconfig_path }}"
       - "retention: {{ prometheus_retention }}"
   delegate_to: localhost
