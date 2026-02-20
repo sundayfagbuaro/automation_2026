@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nfs-csi
+  namespace: argocd-monitoring
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+    chart: nfs-subdir-external-provisioner
+    targetRevision: 4.0.18
+    helm:
+      values: |
+        nfs:
+          server: 10.10.1.102
+          path: /srv/nfs/grafana
+        storageClass:
+          name: nfs-csi-grafana-argocd
+          defaultClass: false
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nfs-csi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -6,8 +6,8 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/gitops-lab
-    targetRevision: main
+    repoURL: git@github.com:sundayfagbuaro/automation_2026.git
+    targetRevision: monitoring_via_argocd
     path: apps
   destination:
     server: https://kubernetes.default.svc
@@ -16,3 +16,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
