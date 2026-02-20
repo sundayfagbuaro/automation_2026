@@ -1,6 +1,0 @@
-#!/Users/sundayfagbuaro/git/projects/storage_automation_lab_2026/.venv-ontap/bin/python3.11
-import sys
-from dotenv.__main__ import cli
-if __name__ == '__main__':
-    sys.argv[0] = sys.argv[0].removesuffix('.exe')
-    sys.exit(cli())

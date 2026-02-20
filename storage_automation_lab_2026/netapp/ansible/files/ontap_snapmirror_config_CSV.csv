@@ -1,2 +1,0 @@
-source_svm,source_volume,destination_svm,destination_volume,schedule
-svm_prod1,vol_data1,svm_prod2,vol_data2,daily

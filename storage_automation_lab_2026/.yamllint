@@ -1,4 +1,0 @@
-rules:
-  line-length:
-    max: 400  # increase from default 80
-    level: warning

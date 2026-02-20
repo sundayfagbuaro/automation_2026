@@ -1,4 +1,0 @@
-svm_name,root_volume,aggregate,volume_name,volume_size,lun_name,lun_size,nfs_export,cifs_share_name,cifs_share_comment
-data_svm,data_svm_root,aggr1,auto_vol_02,70MB,lun_data2,50MB,/vol_data2,share_data2,Automation Share 2
-
-
