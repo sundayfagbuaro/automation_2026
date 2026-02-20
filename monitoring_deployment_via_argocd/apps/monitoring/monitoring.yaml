@@ -11,7 +11,7 @@ spec:
     targetRevision: 55.5.0
     helm:
       valueFiles:
-        - $values/values/monitoring-values.yaml
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring-argocd
@@ -20,4 +20,4 @@ spec:
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=true
+      - CreateNamespace=true
