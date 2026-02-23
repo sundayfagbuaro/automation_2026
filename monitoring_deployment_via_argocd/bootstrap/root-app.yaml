@@ -9,7 +9,7 @@ spec:
 #    repoURL: git@github.com:sundayfagbuaro/automation_2026.git
     repoURL: https://github.com/sundayfagbuaro/automation_2026.git
     targetRevision: monitoring_via_argocd
-    path: apps
+    path: monitoring_deployment_via_argocd/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring-argocd
