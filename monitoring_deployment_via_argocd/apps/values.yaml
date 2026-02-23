@@ -1,0 +1,26 @@
+grafana:
+  adminPassword: admin
+  ingress:
+    enabled: true
+    hosts:
+      - monitoring.sunny.lab
+    ingressClassName: nginx
+    path: /
+    pathType: Prefix
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: nfs-csi-grafana-argocd
+
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 5Gi
+          storageClassName: nfs-csi-prometheus-argocd
