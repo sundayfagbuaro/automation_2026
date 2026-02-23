@@ -19,7 +19,7 @@ spec:
           defaultClass: false
   destination:
     server: https://kubernetes.default.svc
-    namespace: nfs-csi
+#    namespace: nfs-csi
   syncPolicy:
     automated:
       prune: true
