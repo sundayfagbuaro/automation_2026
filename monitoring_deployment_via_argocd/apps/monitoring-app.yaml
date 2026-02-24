@@ -40,6 +40,14 @@ spec:
                   resources:
                     requests:
                       storage: 6Gi
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - prometheus.containers.sunny.lab
+            path: /
+            pathType: Prefix
+            tls: []
 
         grafana:
           persistence:
@@ -48,6 +56,14 @@ spec:
             accessModes: ["ReadWriteOnce"]
             size: 6Gi
           adminPassword: P@ssWord1
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - containers.sunny.lab
+            path: /
+            pathType: Prefix
+            tls: []   # or configure TLS if needed
   syncPolicy:
     automated:
       prune: true
