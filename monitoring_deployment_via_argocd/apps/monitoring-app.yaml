@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/sundayfagbiaro/automation_2026.git  # <-- Git repo
+    repoURL: https://github.com/sundayfagbuaro/automation_2026.git  # <-- Git repo
     targetRevision: monitoring_via_argocd                     # <-- branch or tag
     path: monitoring_deployment_via_argocd/apps
     helm:
