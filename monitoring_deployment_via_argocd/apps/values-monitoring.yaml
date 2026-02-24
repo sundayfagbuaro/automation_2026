@@ -1,0 +1,50 @@
+grafana:
+  enabled: true
+  adminPassword: "P@ssWord1"
+
+  persistence:
+    enabled: true
+    type: pvc
+    storageClassName: nfs-csi-grafana   # change if needed
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - containers.sunny.lab
+    path: /
+    pathType: Prefix
+    tls: []
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: nfs-csi-prometheus  # change if needed
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+    retention: 15d
+
+#alertmanager:
+#  alertmanagerSpec:
+#    storage:
+#      volumeClaimTemplate:
+#        spec:
+#          storageClassName: standard
+#          accessModes: ["ReadWriteOnce"]
+#          resources:
+#            requests:
+#              storage: 2Gi
+
+defaultRules:
+  create: true
+
+rbac:
+  create: true
