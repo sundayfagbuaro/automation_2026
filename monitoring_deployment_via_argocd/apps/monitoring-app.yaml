@@ -21,14 +21,14 @@ spec:
         defaultRules:
           create: true
 
-        ingress:
-          enabled: true
-          ingressClassName: nginx
-          hosts:
-            - containers.sunny.lab
-          path: /
-          pathType: Prefix
-          tls: []
+#        ingress:
+#          enabled: true
+#          ingressClassName: nginx
+#          hosts:
+#            - containers.sunny.lab
+#          path: /
+#          pathType: Prefix
+#          tls: []
 
         prometheus:
           prometheusSpec:
