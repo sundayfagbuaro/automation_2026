@@ -1,0 +1,18 @@
+kubeconfig_path: /home/bobosunne/.kube/ansible-kubeconfig
+monitoring_namespace: monitoring
+storage_class_grafana: nfs-csi-grafana
+storage_class_prometheus: nfs-csi-prometheus
+grafana_domain: containers.sunny.lab
+
+prometheus_storage: 5Gi
+grafana_storage: 5Gi
+#alertmanager_storage: 5Gi
+
+prometheus_retention: 15d
+
+grafana_admin_password: "P@ssWord1"
+
+
+# group_vars/master.yml
+prometheus_helm_release: kube-prometheus-stack
+prometheus_values_file: "{{ role_path }}/templates/values.yaml.j2"
