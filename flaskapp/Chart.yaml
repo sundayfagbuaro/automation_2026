@@ -1,0 +1,10 @@
+apiVersion: v2
+name: flaskapp
+description: A Helm chart for Flask-App Deployment To Kubernetes Cluster
+type: application
+version: 0.1.0
+appVersion: "v1"
+dependencies:
+  - name: mysql
+    version: 9.4.0
+    repository: https://charts.bitnami.com/bitnami

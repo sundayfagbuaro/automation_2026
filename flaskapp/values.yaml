@@ -1,0 +1,50 @@
+replicaCount: 1
+
+image:
+  repository: sundayfagbuaro/k8s-deploy-demo
+  tag: v1
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: containers.sunny.lab
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+mysql:
+  auth:
+    existingSecret: myapp-flaskapp-db-secret
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+
+#mysql:
+#  auth:
+#    database: users_db
+#    username: root
+#    password: passwword
+#  primary:
+#    persistence:
+#      enabled: true
+#      size: 5Gi
+
+
+

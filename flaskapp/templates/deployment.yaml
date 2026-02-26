@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "flaskapp.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "flaskapp.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "flaskapp.name" . }}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: {{ include "flaskapp.name" . }}
+              topologyKey: "kubernetes.io/hostname"
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.35
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until nc -z -v -w30 {{ include "flaskapp.fullname" . }}-mysql 3306; do
+                echo "Waiting for MySQL..."
+                sleep 5
+              done
+      containers:
+        - name: flaskapp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 5000
+
+          envFrom:
+            - secretRef:
+                name: {{ include "flaskapp.fullname" . }}-db-secret
+
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 5

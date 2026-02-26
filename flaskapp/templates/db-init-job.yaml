@@ -1,0 +1,25 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "flaskapp.fullname" . }}-db-init
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: db-init
+          image: mysql:8.0
+          envFrom:
+            - secretRef:
+                name: {{ include "flaskapp.fullname" . }}-db-secret
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Creating database and table if not exists"
+              mysql -h {{ include "flaskapp.fullname" . }}-mysql \
+                    -u $DB_USER -p$DB_PASSWORD \
+                    -e "CREATE DATABASE IF NOT EXISTS $DB_NAME; USE $DB_NAME; CREATE TABLE IF NOT EXISTS new_users (id INT PRIMARY KEY AUTO_INCREMENT, f_name VARCHAR(50)), l_name VARCHAR(50)), address VARCHAR(50)), phone VARCHAR(50)), username VARCHAR(50)), password VARCHAR(50)), email VARCHAR(50));"

@@ -1,0 +1,13 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "flaskapp.fullname" . }}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{ include "flaskapp.name" . }}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector: {}
