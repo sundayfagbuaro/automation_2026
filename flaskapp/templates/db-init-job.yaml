@@ -20,7 +20,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-secret
-          image: sundayfagbuaro/ubuntu-python-java-git
+          image: busybox:1.36
           command:
             - sh
             - -c
