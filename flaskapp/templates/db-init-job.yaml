@@ -20,7 +20,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-secret
-          image: ubuntu:22.04
+          image: alpine:3.18
           command:
             - sh
             - -c
