@@ -21,7 +21,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       initContainers:
         - name: wait-for-db
-          image: alpine:3.18
+          image: sundayfagbuaro/ubuntu-python-java-git
           command:
             - /bin/sh
             - -c

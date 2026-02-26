@@ -20,7 +20,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-secret
-          image: alpine:3.18
+          image: sundayfagbuaro/ubuntu-python-java-git
           command:
             - sh
             - -c
