@@ -20,7 +20,7 @@ spec:
       restartPolicy: Never
       initContainers:
         - name: wait-for-secret
-          image: busybox:1.36
+          image: ubuntu:22.04
           command:
             - sh
             - -c
