@@ -35,17 +35,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 5000
-          env:
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: myapp-db-secret
-                  key: DB_USER
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: myapp-db-secret
-                  key: DB_PASS
+
+          envFrom:
+            - secretRef:
+                name: {{ include "flaskapp.fullname" . }}-db-secret
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
