@@ -28,23 +28,23 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
-mysql:
-  auth:
-    existingSecret: myapp-flaskapp-db-secret
-  primary:
-    persistence:
-      enabled: true
-      size: 5Gi
-
 #mysql:
 #  auth:
-#    database: users_db
-#    username: root
-#    password: passwword
+#    existingSecret: myapp-flaskapp-db-secret
 #  primary:
 #    persistence:
 #      enabled: true
 #      size: 5Gi
+
+mysql:
+  auth:
+    database: users_db
+    username: root
+    password: password
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
 
 
 
