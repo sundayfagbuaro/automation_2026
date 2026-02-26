@@ -9,6 +9,17 @@ spec:
   template:
     spec:
       restartPolicy: OnFailure
+      initContainers:
+        - name: wait-for-secret
+          image: busybox:1.35
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until kubectl get secret {{ include "flaskapp.fullname" . }}-db-secret; do
+                echo "Waiting for secret..."
+                sleep 2
+              done
       containers:
         - name: db-init
           image: mysql:8.0
