@@ -45,6 +45,12 @@ database:
       username: flaskuser           # MySQL user
       password: password            # Password for the MySQL user
     
+    image:
+      registry: docker.io
+      repository: bitnami/mysql
+      tag: 8.0.33-debian-11-r0        # Valid image tag
+      pullPolicy: IfNotPresent
+    
     primary:
       persistence:
         enabled: true
