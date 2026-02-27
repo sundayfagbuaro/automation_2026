@@ -4,8 +4,8 @@ image:
   repository: docker.io/sundayfagbuaro/flask-helm-deploy-img
   tag: 1.0
   pullPolicy: IfNotPresent
-  pullSecrets:
-    - name: myregistrykey
+#  pullSecrets:
+#    - name: myregistrykey
 
 service:
   type: ClusterIP
