@@ -13,6 +13,8 @@ ingress:
   enabled: true
   className: nginx
   host: containers.sunny.lab
+  service: myapp-flaskapp
+  port: 5000
 
 resources:
   requests:
@@ -45,7 +47,7 @@ database:
   primary:
     persistence:
       enabled: true
-      size: 8Gi
+      size: 5Gi
       storageClass: nfs-csi-grafana
     service:
       type: ClusterIP
