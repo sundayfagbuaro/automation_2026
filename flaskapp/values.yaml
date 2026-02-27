@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: sundayfagbuaro/k8s-deploy-demo
-  tag: v1
+  repository: sundayfagbuaro/flask-helm-deploy-img
+  tag: 1.0
   pullPolicy: IfNotPresent
 
 service:
@@ -36,15 +36,28 @@ autoscaling:
 #      enabled: true
 #      size: 5Gi
 
-mysql:
+#mysql:
+#  auth:
+#    database: users_db
+#    username: root
+#    password: password
+#  primary:
+#    persistence:
+#      enabled: true
+#      size: 5Gi
+
+database:
   auth:
-    database: users_db
-    username: root
-    password: password
+    host: myapp-flaskapp-mysql   # MUST match your MySQL Service name
+    name: users_db
+    port: 3306
+
+    secretName: myapp-db-secret
+    secretUserKey: DB_USER
+    secretPasswordKey: DB_PASS
   primary:
     persistence:
       enabled: true
       size: 5Gi
-
 
 

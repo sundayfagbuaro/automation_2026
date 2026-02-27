@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-flaskapp-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flaskapp-mysql
+  template:
+    metadata:
+      labels:
+        app: flaskapp-mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-db-secret
+                  key: DB_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-db-secret
+                  key: DB_PASS
