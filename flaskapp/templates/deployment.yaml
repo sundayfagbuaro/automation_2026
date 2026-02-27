@@ -26,7 +26,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              until nc -z -v -w30 {{ include "flaskapp.fullname" . }}-mysql 3306; do
+              until nc -z -v -w30 {{ .Release.Name }}-mysql 3306; do
                 echo "Waiting for MySQL..."
                 sleep 5
               done
@@ -36,6 +36,14 @@ spec:
           ports:
             - containerPort: 5000
           env:
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+
+            - name: DB_NAME
+              value: {{ .Values.database.name }}
+
+            - name: DB_PORT
+              value: "{{ .Values.database.port }}"
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -46,6 +54,19 @@ spec:
                 secretKeyRef:
                   name: myapp-db-secret
                   key: DB_PASS
+        
+
+#          env:
+#            - name: DB_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: myapp-db-secret
+#                  key: DB_USER
+#            - name: DB_PASS
+#                secretKeyRef:
+##              valueFrom:
+#                  name: myapp-db-secret
+#                  key: DB_PASS
 
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

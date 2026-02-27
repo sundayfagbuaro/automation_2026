@@ -43,7 +43,7 @@ spec:
             - |
               echo "Waiting for MySQL to be ready..."
               until mysqladmin ping \
-                -h {{ .Values.database.host }} \
+                -h {{ .Release.Name  }}-mysql \
                 -u"$DB_USER" \
                 -p"$DB_PASS" \
                 --silent; do
@@ -52,23 +52,32 @@ spec:
               done
 
               echo "Creating database and table if not exists"
-              mysql -h {{ include "flaskapp.fullname" . }}-mysql \
-                    -u $DB_USER -p$DB_PASSWORD \
-                    -e "CREATE DATABASE IF NOT EXISTS $DB_NAME; USE $DB_NAME; CREATE TABLE IF NOT EXISTS new_users (id INT PRIMARY KEY AUTO_INCREMENT, f_name VARCHAR(50)), l_name VARCHAR(50)), address VARCHAR(50)), phone VARCHAR(50)), username VARCHAR(50)), password VARCHAR(50)), email VARCHAR(50));"
+              mysql -h {{ .Release.Name }}-mysql \
+                    -u $DB_USER -p$DB_PASS \
+                    -e "CREATE DATABASE IF NOT EXISTS {{ .Values.database.name }}; USE {{ .Values.database.name }}; 
+                       CREATE TABLE IF NOT EXISTS new_users (
+                         id INT PRIMARY KEY AUTO_INCREMENT,
+                         f_name VARCHAR(50),
+                         l_name VARCHAR(50),
+                         address VARCHAR(50),
+                         phone VARCHAR(50),
+                         username VARCHAR(50),
+                         password VARCHAR(50),
+                         email VARCHAR(50)
+                       );"
 
               echo "Database initialization complete."
           env:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.database.secretName }}
-                  key: {{ .Values.database.secretUserKey }}
-
+                  name: myapp-db-secret
+                  key: DB_USER
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.database.secretName }}
-                  key: {{ .Values.database.secretPasswordKey }}
+                  name: myapp-db-secret
+                  key: DB_PASS
           volumeMounts:
             - name: db-secret
               mountPath: /etc/secrets

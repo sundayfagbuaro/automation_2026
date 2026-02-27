@@ -28,36 +28,16 @@ autoscaling:
   maxReplicas: 5
   targetCPUUtilizationPercentage: 70
 
-#mysql:
-#  auth:
-#    existingSecret: myapp-flaskapp-db-secret
-#  primary:
-#    persistence:
-#      enabled: true
-#      size: 5Gi
-
-#mysql:
-#  auth:
-#    database: users_db
-#    username: root
-#    password: password
-#  primary:
-#    persistence:
-#      enabled: true
-#      size: 5Gi
-
 database:
+  host: myapp-mysql
+  name: users_db
+  port: 3306
+  secretName: myapp-db-secret
+  secretUserKey: DB_USER
+  secretPasswordKey: DB_PASS
+
+mysql:
   auth:
-    host: myapp-flaskapp-mysql   # MUST match your MySQL Service name
-    name: users_db
-    port: 3306
-
-    secretName: myapp-db-secret
-    secretUserKey: DB_USER
-    secretPasswordKey: DB_PASS
-  primary:
-    persistence:
-      enabled: true
-      size: 5Gi
-
-
+    database: users_db
+    username: flaskuser
+    password: password
