@@ -42,3 +42,9 @@ mysql:
     database: users_db
     username: flaskuser
     password: password
+  primary:
+  persistence:
+    enabled: true
+    size: 8Gi
+    storageClass: nfs-csi-databases
+  
