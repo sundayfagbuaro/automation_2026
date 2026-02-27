@@ -13,6 +13,7 @@ ingress:
   enabled: true
   className: nginx
   host: containers.sunny.lab
+  path: /myapp
 
 resources:
   requests:
