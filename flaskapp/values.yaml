@@ -38,6 +38,7 @@ database:
 
 mysql:
   auth:
+    rootPassword: password
     database: users_db
     username: flaskuser
     password: password
