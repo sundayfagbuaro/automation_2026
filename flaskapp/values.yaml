@@ -48,7 +48,7 @@ database:
     persistence:
       enabled: true
       size: 5Gi
-      storageClass: nfs-csi-grafana
+      storageClassName: nfs-csi-databases
     service:
       type: ClusterIP
       port: 3306
