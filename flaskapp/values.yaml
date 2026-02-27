@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: sundayfagbuaro/flask-helm-deploy-img
+  repository: docker.io/sundayfagbuaro/flask-helm-deploy-img
   tag: 1.0
   pullPolicy: IfNotPresent
   pullSecrets:
