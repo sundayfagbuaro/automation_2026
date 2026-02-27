@@ -346,15 +346,29 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: data
-        labels:
-          app.kubernetes.io/name: mysql
-          app.kubernetes.io/instance: myapp
+        labels: {{ include "common.labels.matchLabels" . | nindent 10 }}
           app.kubernetes.io/component: primary
+          {{- if .Values.commonLabels }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 10 }}
+          {{- end }}
+        annotations:
+          {{- if .Values.primary.persistence.annotations }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.primary.persistence.annotations "context" $) | nindent 10 }}
+          {{- end }}
+          {{- if .Values.commonAnnotations }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 10 }}
+          {{- end }}
       spec:
         accessModes:
-          - ReadWriteOnce
+          {{- range .Values.primary.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
         resources:
           requests:
-            storage: 8Gi
-        storageClassName: nfs-csi-databases  # <-- direct value
-#        {{- end }}
+            storage: {{ .Values.primary.persistence.size | quote }}
+        storageClassName: {{ .Values.primary.persistence.storageClass | quote }} 
+        {{- include "common.storage.class" (dict "persistence" .Values.primary.persistence "global" .Values.global) | nindent 8 }}
+        {{- if .Values.primary.persistence.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.primary.persistence.selector "context" $) | nindent 10 }}
+        {{- end -}}
+        {{- end }}

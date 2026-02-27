@@ -39,20 +39,20 @@ database:
   secretPasswordKey: DB_PASS
 
   mysql:
-  auth:
-    rootPassword: password        # Root password for MySQL
-    database: users_db            # Database to auto-create
-    username: flaskuser           # MySQL user
-    password: password            # Password for the MySQL user
-
-  primary:
-    persistence:
-      enabled: true
-      size: 8Gi
-      storageClassName: nfs-csi-databases   # IMPORTANT: use storageClassName
-      accessModes:
-        - ReadWriteOnce
-
+    auth:
+      rootPassword: password        # Root password for MySQL
+      database: users_db            # Database to auto-create
+      username: flaskuser           # MySQL user
+      password: password            # Password for the MySQL user
+    
+    primary:
+      persistence:
+        enabled: true
+        storageClass: nfs-csi-databases
+        size: 8Gi
+        accessModes:
+         - ReadWriteOnce
+    
     service:
       type: ClusterIP
       port: 3306
