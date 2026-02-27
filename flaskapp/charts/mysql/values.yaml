@@ -72,8 +72,8 @@ diagnosticMode:
 ##
 image:
   registry: docker.io
-  repository: bitnami/mysql
-  tag: "8.0.33-debian-11-r0"
+  repository: mysql
+  tag: "8.0"
   pullPolicy: IfNotPresent
 
 #image:
