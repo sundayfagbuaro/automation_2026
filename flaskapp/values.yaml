@@ -40,17 +40,25 @@ database:
 
   mysql:
   auth:
-    rootPassword: password
-    database: users_db
-    username: flaskuser
-    password: password
+    rootPassword: password        # Root password for MySQL
+    database: users_db            # Database to auto-create
+    username: flaskuser           # MySQL user
+    password: password            # Password for the MySQL user
+
   primary:
     persistence:
       enabled: true
-      size: 5Gi
-      storageClassName: nfs-csi-databases
+      size: 8Gi
+      storageClassName: nfs-csi-databases   # IMPORTANT: use storageClassName
+      accessModes:
+        - ReadWriteOnce
+
     service:
       type: ClusterIP
       port: 3306
       nodePort: null
       annotations: {}
+
+# Optional: extra labels or annotations
+commonLabels: {}
+commonAnnotations: {}
