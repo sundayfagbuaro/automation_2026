@@ -4,11 +4,6 @@
 ##  repository: mysql
 #  pullPolicy: IfNotPresent
 
-image:
-  registry: docker.io
-  repository: bitnami/mysql
-  tag: 8.0.36-debian-11-r0
-
 fullnameOverride: flask-db
 
 primary:
