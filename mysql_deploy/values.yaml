@@ -14,7 +14,7 @@ primary:
 volumePermissions:
   enabled: true
   securityContext:
-    fsGroup: 1001
+    runAsUser: 0
 
 persistence:
   enabled: true
