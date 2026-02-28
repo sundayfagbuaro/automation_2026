@@ -11,6 +11,11 @@ primary:
     app: flask-db
   podAnnotations: {}
 
+volumePermissions:
+  enabled: true
+  securityContext:
+    fsGroup: 1001
+
 persistence:
   enabled: true
   storageClass: nfs-csi-databases
