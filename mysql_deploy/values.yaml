@@ -10,6 +10,9 @@ primary:
   podLabels:
     app: flask-db
   podAnnotations: {}
+  securityContext:
+    runAsUser: 0
+    fsGroup: 0
 
 persistence:
   enabled: true
