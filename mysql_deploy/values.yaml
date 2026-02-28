@@ -1,3 +1,9 @@
+image:
+  registry: docker.io
+  repository: mysql
+  tag: "8.0"
+  pullPolicy: IfNotPresent
+
 fullnameOverride: flask-db
 
 primary:
@@ -7,10 +13,10 @@ primary:
 
 persistence:
   enabled: true
-  size: 8Gi
   storageClass: nfs-csi-databases
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
+  size: 8Gi
 
 auth:
   existingSecret: mysql-secret
