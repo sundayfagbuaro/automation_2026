@@ -9,13 +9,6 @@ fullnameOverride: flask-db
 primary:
   podLabels:
     app: flask-db
-  podAnnotations: {}
-  extraInitContainers:
-    - name: preserve-logs-symlinks
-      command: ["sh", "-c", "echo skipping logs symlinks"]
-  extraInitContainers: []
-  volumePermissions:
-    enabled: true
   # Disable the preserve-logs-symlinks init container
   preserveLogsSymlinks:
     enabled: false
