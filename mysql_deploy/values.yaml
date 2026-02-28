@@ -16,6 +16,9 @@ primary:
   extraInitContainers: []
   volumePermissions:
     enabled: true
+  # Disable the preserve-logs-symlinks init container
+  preserveLogsSymlinks:
+    enabled: false
 
 volumePermissions:
   enabled: true
