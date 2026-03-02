@@ -26,13 +26,23 @@ volumePermissions:
   securityContext:
     runAsUser: 0
 
+#persistence:
+#  enabled: true
+#  storageClass: nfs-csi-databases
+#  accessModes:
+#    - ReadWriteMany
+#  size: 8Gi
+#  persistentVolumeReclaimPolicy: Delete
+
 persistence:
   enabled: true
-  storageClass: nfs-csi-databases
+  storageClass: ""        # leave empty for hostPath
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   size: 8Gi
-  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: /mysql_data  # path on the node
+    type: DirectoryOrCreate
 
 auth:
   existingSecret: mysql-secret
