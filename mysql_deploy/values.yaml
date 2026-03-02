@@ -5,9 +5,9 @@
 #  pullPolicy: IfNotPresent
 
 image:
-  registry: ghcr.io
-  repository: bitnami/mysql
-  tag: 8.0.37-debian-12-r2
+  registry: docker.io
+  repository: mysql
+  tag: 8.0.37
 
 imagePullSecrets:
   - name: dockerhub-secret
