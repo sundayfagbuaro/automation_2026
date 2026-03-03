@@ -8,7 +8,7 @@ fullnameOverride: flask-db
 
 persistence:
   enabled: true
-  storageClassName: nfs-csi-databases
+  storageClassName: nfs-csi-flaskdb
   accessModes:
     - ReadWriteOnce
   size: 5Gi
