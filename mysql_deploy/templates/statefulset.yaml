@@ -12,7 +12,9 @@ spec:
 
   updateStrategy:
     type: RollingUpdate
-
+  securityContext:
+    fsGroup: 1001       # gives permission to write inside PV
+    runAsUser: 1001  
   template:
     metadata:
       labels:
@@ -21,7 +23,6 @@ spec:
       containers:
         - name: {{ .Values.service.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-
           envFrom:
             - secretRef:
                 name: {{ .Values.secrets.existingSecret }}
