@@ -24,9 +24,12 @@ spec:
           securityContext:
             runAsUser: 1001
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          envFrom:
-            - secretRef:
-                name: {{ .Values.secrets.existingSecret }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: mysql-root-password
 
           ports:
             - containerPort: {{ .Values.service.port }}
