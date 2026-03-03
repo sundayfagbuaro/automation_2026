@@ -44,7 +44,7 @@ spec:
             
             - name: mysql-secret
               mountPath: /run/secrets
-              readOnly: true
+#              readOnly: true
 
       volumes:
         - name: initdb
