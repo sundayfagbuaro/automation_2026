@@ -13,7 +13,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
   securityContext:
-    fsGroup: 1001       # gives permission to write inside PV
+    fsGroup: 999       # gives permission to write inside PV
   template:
     metadata:
       labels:
@@ -22,7 +22,7 @@ spec:
       containers:
         - name: {{ .Values.service.name }}
           securityContext:
-            runAsUser: 1001
+            runAsUser: 999
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           env:
             - name: MYSQL_ROOT_PASSWORD
