@@ -20,15 +20,23 @@ service:
 secrets:
   existingSecret: mysql-secret
 
-
 initdbScripts:
-  init.sql: |
-    CREATE DATABASE IF NOT EXISTS users_db;
+  init.sh: |
+    #!/bin/bash
+    set -e
 
+    MYSQL_ROOT_PASSWORD=$(cat /run/secrets/mysql-root-password)
+    MYSQL_USER=$(cat /run/secrets/mysql-username)
+    MYSQL_PASSWORD=$(cat /run/secrets/mysql-password)
 
-    use users_db;
+    mysql -u root -p"$MYSQL_ROOT_PASSWORD" <<-EOSQL
+      CREATE DATABASE IF NOT EXISTS users_db;
+      CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+      GRANT ALL PRIVILEGES ON users_db.* TO '${MYSQL_USER}'@'%';
+      FLUSH PRIVILEGES;
 
-    CREATE TABLE new_users (
+      USE users_db;
+      CREATE TABLE IF NOT EXISTS new_users (
         id INT AUTO_INCREMENT,
         f_name VARCHAR(30),
         l_name VARCHAR(30),
@@ -38,4 +46,5 @@ initdbScripts:
         password VARCHAR(20),
         email VARCHAR(30),
         PRIMARY KEY(id)
-    );
+      );
+    EOSQL
