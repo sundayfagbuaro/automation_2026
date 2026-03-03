@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.service.name }}
+  updateStrategy:
+  type: RollingUpdatestrategy:
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service.name }}
+    spec:
+      containers:
+      - image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        name: {{ .Values.service.name }}
+        envFrom:
+          - secretRef:
+            name: {{ .Values.secrets.existingSecret }}
+          
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.secrets.existingSecret }}
+                key: mysql-root-password
+        ports:
+        - containerPort: {{ .Values.service.port }}
+          name: {{ .Values.service.name }}
+        volumeMounts:
+        - name: mysql-pv-storage
+          mountPath: /var/lib/mysql
+        - name: initdb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: mysql-pv-storage
+        persistentVolumeClaim:
+          claimName: {{ include "mysql_deploy.fullname" . }}-pvc
+      - name: initdb
+        configMap:
+          name: {{ include "mysql_deploy.fullname" . }}-initdb
+

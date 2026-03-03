@@ -1,60 +1,32 @@
-#image:
-#  registry: docker.io
-#  tag: "8.0"
-##  repository: mysql
-#  pullPolicy: IfNotPresent
-
 image:
-  registry: docker.io
   repository: mysql
-  tag: 8.0.37
-
-imagePullSecrets:
-  - name: dockerhub-secret
+  tag: 8.0
+  
+replicas: 1
 
 fullnameOverride: flask-db
 
-primary:
-  podLabels:
-    app: flask-db
-  # Disable the preserve-logs-symlinks init container
-  preserveLogsSymlinks:
-    enabled: false
-
-volumePermissions:
-  enabled: true
-  securityContext:
-    runAsUser: 0
-
-#persistence:
-#  enabled: true
-#  storageClass: nfs-csi-databases
-#  accessModes:
-#    - ReadWriteMany
-#  size: 8Gi
-#  persistentVolumeReclaimPolicy: Delete
-
 persistence:
   enabled: true
-  storageClass: ""        # leave empty for hostPath
+  storageClassName: nfs-csi-database
   accessModes:
     - ReadWriteOnce
-  size: 8Gi
-  hostPath:
-    path: /mysql_data  # path on the node
-    type: DirectoryOrCreate
+  size: 5Gi
 
-auth:
+service:
+  name: flask-db
+  port: 3306
+
+secrets:
   existingSecret: mysql-secret
-  username: flaskuser
-  database: users_db
+
 
 initdbScripts:
   init.sql: |
     CREATE DATABASE IF NOT EXISTS users_db;
 
 
-    use users_db
+    use users_db;
 
     CREATE TABLE new_users (
         id INT AUTO_INCREMENT,
