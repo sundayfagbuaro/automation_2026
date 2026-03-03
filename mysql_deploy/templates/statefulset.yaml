@@ -42,18 +42,10 @@ spec:
             - name: initdb
               mountPath: /docker-entrypoint-initdb.d
             
-            - name: mysql-secret
-              mountPath: /run/secrets
-#              readOnly: true
-
       volumes:
         - name: initdb
           configMap:
             name: {{ include "mysql_deploy.fullname" . }}-initdb
-        
-        - name: mysql-secret
-          secret:
-            secretName: mysql-secret
 
   volumeClaimTemplates:
     - metadata:
