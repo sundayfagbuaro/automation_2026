@@ -1,10 +1,3 @@
-#flaskapp:
-#  image:
-#    repository: docker.io/sundayfagbuaro/k8s-deploy-demo:v1
-#    tag: "v1"
-#    pullPolicy: IfNotPresent
-#  replicaCount: 
-
 replicaCount: 1
 
 image:
@@ -21,5 +14,9 @@ mysql:
   port: 3306
   database: users_db
   existingSecret: mysql-secret   # Must contain mysql-username & mysql-root-password
+
+ingress:
+  enabled: true
+  host: containers.sunny.lab
 
 resources: {}
