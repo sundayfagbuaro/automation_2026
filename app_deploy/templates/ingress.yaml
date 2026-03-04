@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "app_deploy.fullname" . }}
+  name: {{ .Release.Name }}-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
