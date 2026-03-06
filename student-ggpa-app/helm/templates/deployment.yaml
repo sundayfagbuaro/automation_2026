@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ggpa-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ggpa
+  template:
+    metadata:
+      labels:
+        app: ggpa
+    spec:
+      containers:
+      - name: ggpa-container
+        image: sundayfagbuaro/ggpa-app:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DATABASE_URL
+          value: postgresql://postgres:postgres@ggpa-db:5432/ggpa_db

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Welcome {{ student.username }}</h2>
+
+<div class="card p-4">
+
+<h4>Your GGPA</h4>
+
+<h1 class="text-primary">{{ student.ggpa }}</h1>
+
+</div>
+
+<a class="btn btn-danger mt-3" href="/logout">Logout</a>
+
+{% endblock %}
