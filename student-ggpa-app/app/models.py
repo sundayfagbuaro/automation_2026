@@ -1,7 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
+from app import db  # <- import the single instance
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db = SQLAlchemy()
 
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -9,9 +8,9 @@ class Student(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     ggpa = db.Column(db.Float, default=0.0)
-    
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-        
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

@@ -3,19 +3,19 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from app.config import Config
 
-db = SQLAlchemy()
+db = SQLAlchemy()  # <- ONE instance
 jwt = JWTManager()
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    db.init_app(app)
+    db.init_app(app)  # <- attach db to the app
     jwt.init_app(app)
 
     from app.auth import auth_bp
     from app.admin import admin_bp
-
+    
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
 
