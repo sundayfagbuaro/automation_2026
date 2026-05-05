@@ -1,0 +1,38 @@
+- name: Enable passwordless SSH access
+  hosts: spec-scale
+  become: yes
+
+  tasks:
+
+    - name: Ensure SSH service is installed
+      apt:
+        name: openssh-server
+        state: present
+        update_cache: yes
+
+    - name: Ensure SSH service is running
+      service:
+        name: ssh
+        state: started
+        enabled: yes
+
+    - name: Create .ssh directory for user
+      file:
+        path: "/home/{{ ansible_user }}/.ssh"
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0700'
+
+    - name: Add SSH public key to authorized_keys
+      authorized_key:
+        user: "{{ ansible_user }}"
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: Fix permissions on authorized_keys
+      file:
+        path: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0600'
