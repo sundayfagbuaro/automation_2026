@@ -9,7 +9,8 @@ resource "proxmox_vm_qemu" "vm" {
   define_connection_info = true
   ci_wait                = 60
   ciuser = "bobosunne"
-
+#  cipassword = "TempPassword"
+  sshkeys    = file("/home/bobosunne/.ssh/id_rsa.pub")
 
   os_type = "cloud-init"
 
@@ -26,7 +27,6 @@ resource "proxmox_vm_qemu" "vm" {
 
   ipconfig0 = "ip=dhcp"
 
-  sshkeys = file("~/.ssh/id_rsa.pub")
 }
 
 resource "null_resource" "run_ansible" {
