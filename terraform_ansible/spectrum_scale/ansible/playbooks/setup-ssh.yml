@@ -18,7 +18,7 @@
     
     - name: Read public key
       slurp:
-        src: /home/rocky/.ssh/id_rsa.pub
+        src: /home/bobosunne/.ssh/id_rsa.pub
       register: pubkey
     
     - name: Add keys to authorized_keys
