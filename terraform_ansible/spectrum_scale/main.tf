@@ -35,8 +35,10 @@ resource "null_resource" "run_ansible" {
   ]
 
   provisioner "local-exec" {
-    command = <<EOT
-ansible-playbook -i ansible/inventory.ini ansible/playbooks/main.yml
-EOT
+  environment = {
+    ANSIBLE_HOST_KEY_CHECKING = "False"
   }
+
+  command = "ansible-playbook -i ansible/inventory.ini ansible/playbooks/main.yml"
+}
 }
