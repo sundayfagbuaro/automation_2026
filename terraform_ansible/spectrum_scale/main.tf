@@ -8,7 +8,7 @@ resource "proxmox_vm_qemu" "vm" {
   agent                  = 1
   define_connection_info = true
   ci_wait                = 60
-  ciuser = bobosunne
+  ciuser = "bobosunne"
 
 
   os_type = "cloud-init"
