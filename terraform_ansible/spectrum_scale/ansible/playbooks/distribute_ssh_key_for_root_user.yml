@@ -4,38 +4,38 @@
 
   tasks:
 
-    - name: Ensure .ssh directory exists
+    - name: Ensure .ssh directory exists for root
       file:
-        path: /home/root/.ssh
+        path: /root/.ssh
         state: directory
         owner: root
         group: root
         mode: '0700'
 
-    - name: Copy private SSH key (cluster key)
+    - name: Copy private SSH key (cluster key) for root
       copy:
         src: /home/bobosunne/.ssh/id_rsa
-        dest: /home/root/.ssh/id_rsa
+        dest: /root/.ssh/id_rsa
         owner: root
         group: root
         mode: '0600'
 
-    - name: Copy public SSH key (cluster key)
+    - name: Copy public SSH key (cluster key) for root
       copy:
         src: /home/bobosunne/.ssh/id_rsa.pub
-        dest: /home/root/.ssh/id_rsa.pub
+        dest: /root/.ssh/id_rsa.pub
         owner: root
         group: root
         mode: '0644'
 
-    - name: Ensure authorized_keys contains cluster public key
+    - name: Ensure authorized_keys contains cluster public key for root
       authorized_key:
         user: root
         key: "{{ lookup('file', '/home/bobosunne/.ssh/id_rsa.pub') }}"
     
-    - name: Configure SSH client for passwordless cluster access
+    - name: Configure SSH client for passwordless cluster access for root
       copy:
-        dest: /home/root/.ssh/config
+        dest: /root/.ssh/config
         content: |
           Host *
            StrictHostKeyChecking no
