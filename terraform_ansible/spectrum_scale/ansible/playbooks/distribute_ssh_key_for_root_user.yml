@@ -1,0 +1,46 @@
+- name: Distribute cluster SSH keys for root user
+  hosts: scale
+  become: yes
+
+  tasks:
+
+    - name: Ensure .ssh directory exists
+      file:
+        path: /home/root/.ssh
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+
+    - name: Copy private SSH key (cluster key)
+      copy:
+        src: /home/bobosunne/.ssh/id_rsa
+        dest: /home/root/.ssh/id_rsa
+        owner: root
+        group: root
+        mode: '0600'
+
+    - name: Copy public SSH key (cluster key)
+      copy:
+        src: /home/bobosunne/.ssh/id_rsa.pub
+        dest: /home/root/.ssh/id_rsa.pub
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure authorized_keys contains cluster public key
+      authorized_key:
+        user: root
+        key: "{{ lookup('file', '/home/bobosunne/.ssh/id_rsa.pub') }}"
+    
+    - name: Configure SSH client for passwordless cluster access
+      copy:
+        dest: /home/root/.ssh/config
+        content: |
+          Host *
+           StrictHostKeyChecking no
+           UserKnownHostsFile=/dev/null
+           IdentityFile ~/.ssh/id_rsa
+        owner: root
+        group: root
+        mode: '0600'
