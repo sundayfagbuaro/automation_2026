@@ -32,3 +32,15 @@
       authorized_key:
         user: bobosunne
         key: "{{ lookup('file', '/home/bobosunne/.ssh/id_rsa.pub') }}"
+    
+    - name: Configure SSH client for passwordless cluster access
+      copy:
+        dest: /home/bobosunne/.ssh/config
+        content: |
+          Host *
+           StrictHostKeyChecking no
+           UserKnownHostsFile=/dev/null
+           IdentityFile ~/.ssh/id_rsa
+        owner: bobosunne
+        group: bobosunne
+        mode: '0600'
