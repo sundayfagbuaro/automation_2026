@@ -1,0 +1,30 @@
+---
+- hosts: scale
+  become: true
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Update /etc/hosts
+      blockinfile:
+        path: /etc/hosts
+        block: |
+          {% for host in groups['scale'] %}
+          {{ hostvars[host]['ansible_host'] }} {{ host }}
+          {% endfor %}
+
+    - name: Install packages
+      dnf:
+        name:
+          - firewalld
+          - python3
+          - vim
+        state: present
+
+    - name: Ensure ssh key exists
+      user:
+        name: bobosunne
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa

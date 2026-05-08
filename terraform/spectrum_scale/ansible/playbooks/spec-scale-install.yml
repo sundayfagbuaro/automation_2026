@@ -1,0 +1,13 @@
+---
+- hosts: scale
+  become: true
+  tasks:
+    - name: Disable SELinux
+      selinux:
+        state: disabled
+
+    - name: Enable chronyd
+      service:
+       name: chronyd
+        state: started
+        enabled: true

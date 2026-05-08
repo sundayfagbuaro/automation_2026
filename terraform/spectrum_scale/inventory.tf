@@ -1,13 +1,23 @@
+#resource "local_file" "ansible_inventory" {
+#  content = templatefile("${path.module}/inventory.tpl", {
+#    ips = compact([
+#      for vm in proxmox_vm_qemu.vm :
+#      vm.ssh_host
+#    ])
+#  })
+
+#  filename = "${path.module}/ansible/inventory.ini"
+#}
+
 resource "local_file" "ansible_inventory" {
-  #filename = "${path.module}/spce-scale-inv.ini"
-  filename = "ansible/inventory.ini"
+  content = templatefile("${path.module}/inventory.tpl", {
+    vms = [
+      for idx, vm in proxmox_vm_qemu.vm : {
+        name = "scale-node-${idx + 1}"
+        ip   = vm.ssh_host
+      }
+    ]
+  })
 
-  depends_on = [proxmox_vm_qemu.vm]
-
-  content = <<EOT
-[spec-scale]
-%{ for vm in proxmox_vm_qemu.vm ~}
-${vm.default_ipv4_address} ansible_user=bobosunne
-%{ endfor ~}
-EOT
+  filename = "${path.module}/ansible/inventory.ini"
 }

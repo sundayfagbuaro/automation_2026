@@ -4,6 +4,11 @@ resource "proxmox_vm_qemu" "vm" {
   target_node = var.target_node
   clone       = var.template_name
   full_clone  = true
+  
+  agent                  = 1
+  define_connection_info = true
+  ci_wait                = 60
+
 
   os_type = "cloud-init"
 
@@ -21,4 +26,17 @@ resource "proxmox_vm_qemu" "vm" {
   ipconfig0 = "ip=dhcp"
 
   sshkeys = file("~/.ssh/id_rsa.pub")
+}
+
+resource "null_resource" "run_ansible" {
+
+  depends_on = [
+    local_file.ansible_inventory
+  ]
+
+  provisioner "local-exec" {
+    command = <<EOT
+ansible-playbook -i ansible/inventory.ini ansible/playbooks/main.yml
+EOT
+  }
 }
