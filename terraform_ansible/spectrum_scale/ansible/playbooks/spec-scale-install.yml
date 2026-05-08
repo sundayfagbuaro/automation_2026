@@ -1,13 +1,33 @@
 ---
-- hosts: scale
-  become: true
-  tasks:
-    - name: Disable SELinux
-      selinux:
-        state: disabled
+- name: Copy Spectrum Scale installer to nodes
+  hosts: scale
+  become: yes
 
-    - name: Enable chronyd
-      service:
-       name: chronyd
-        state: started
-        enabled: true
+  tasks:
+
+    - name: Create staging directory
+      file:
+        path: /root/scale_install
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy Spectrum Scale package
+      copy:
+        src: /home/bobosunne/packages/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
+        dest: /root/scale_install/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
+        owner: root
+        group: root
+        mode: '0644'
+    
+    - name: Extract Spectrum Scale installer
+      unarchive:
+        src: /root/scale_install/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
+        dest: /root/scale_install/
+        remote_src: yes
+      
+    - name: Run Spectrum Scale installer extraction
+      shell: |
+        cd /root/scale_install
+        ./Spectrum_Scale_Advanced-4.1.1.7-x86_64-Linux-install --silent
