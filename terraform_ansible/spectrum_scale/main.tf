@@ -1,5 +1,5 @@
 resource "proxmox_vm_qemu" "vm" {
-  count       = 3
+  count       = 1
   name        = "${var.vm_name}-${count.index + 1}"
   target_node = var.target_node
   clone       = var.template_name
