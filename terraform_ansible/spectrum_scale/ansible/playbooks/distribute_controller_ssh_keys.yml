@@ -1,0 +1,34 @@
+- name: Distribute cluster SSH keys
+  hosts: scale
+  become: yes
+
+  tasks:
+
+    - name: Ensure .ssh directory exists
+      file:
+        path: /home/bobosunne/.ssh
+        state: directory
+        owner: bobosunne
+        group: bobosunne
+        mode: '0700'
+
+    - name: Copy private SSH key (cluster key)
+      copy:
+        src: /home/bobosunne/.ssh/id_rsa
+        dest: /home/bobosunne/.ssh/id_rsa
+        owner: bobosunne
+        group: bobosunne
+        mode: '0600'
+
+    - name: Copy public SSH key (cluster key)
+      copy:
+        src: /home/bobosunne/.ssh/id_rsa.pub
+        dest: /home/bobosunne/.ssh/id_rsa.pub
+        owner: bobosunne
+        group: bobosunne
+        mode: '0644'
+
+    - name: Ensure authorized_keys contains cluster public key
+      authorized_key:
+        user: bobosunne
+        key: "{{ lookup('file', '/home/bobosunne/.ssh/id_rsa.pub') }}"

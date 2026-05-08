@@ -22,9 +22,9 @@
           - vim
         state: present
 
-    - name: Ensure ssh key exists
-      user:
-        name: bobosunne
-        generate_ssh_key: yes
-        ssh_key_bits: 4096
-        ssh_key_file: .ssh/id_rsa
+#    - name: Ensure ssh key exists
+#      user:
+#        name: bobosunne
+#        generate_ssh_key: yes
+#        ssh_key_bits: 4096
+#        ssh_key_file: .ssh/id_rsa

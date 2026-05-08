@@ -2,4 +2,5 @@
 - import_playbook: ping.yml
 #- import_playbook: setup-ssh.yml
 - import_playbook: config.yml
+- import_playbook: distribute_controller_ssh_keys.yml
 #- import_playbook: spec-scale-install.yml

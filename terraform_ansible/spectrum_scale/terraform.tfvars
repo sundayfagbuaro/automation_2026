@@ -9,4 +9,4 @@ vm_name = "spec-scale"
 #vm_ip   = "192.168.1.50"
 #gateway = "192.168.1.1"
 
-ssh_public_key = "~/.ssh/id_rsa.pub"
+ssh_public_key = "home/bobosunne/.ssh/id_rsa.pub"
