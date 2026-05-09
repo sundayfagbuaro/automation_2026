@@ -31,9 +31,6 @@
       shell: |
         cd /root/scale_install
         ./Spectrum_Scale_Advanced-4.1.1.7-x86_64-Linux-install --silent
-    
-    - name: Install Spectrum Scale RPMs
-      
 
     - name: Install prerequisite packages for spectrum Scale RPMs
       dnf:
