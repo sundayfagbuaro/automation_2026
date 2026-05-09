@@ -27,7 +27,27 @@
         dest: /root/scale_install/
         remote_src: yes
       
-    - name: Run Spectrum Scale installer extraction
+    - name: Run Spectrum Scale installer extraction # This extract the rpm files into /usr/lpp/mmfs/4.1.1.7
       shell: |
         cd /root/scale_install
         ./Spectrum_Scale_Advanced-4.1.1.7-x86_64-Linux-install --silent
+    
+    - name: Install Spectrum Scale RPMs
+      
+
+    - name: Install prerequisite packages for spectrum Scale RPMs
+      dnf:
+        name:
+          - gcc
+          - cpp
+          - make
+          - kernel-devel
+          - kernel-headers
+          - elfutils-libelf-devel
+        state: present
+
+    - name: Install Spectrum Scale RPMs
+      dnf:
+        name: "/usr/lpp/mmfs/4.1.1.7/*.rpm"
+        disable_gpg_check: yes
+        state: present
