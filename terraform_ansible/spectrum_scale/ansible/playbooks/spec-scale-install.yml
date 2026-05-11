@@ -43,8 +43,19 @@
           - elfutils-libelf-devel
         state: present
 
-    - name: Install Spectrum Scale RPMs
+#    - name: Install Spectrum Scale RPMs
+#      dnf:
+#        name: "/usr/lpp/mmfs/4.1.1.7/*.rpm"
+#        disable_gpg_check: yes
+#        state: present
+    
+    - name: Find RPMs
+      find:
+        paths: /usr/lpp/mmfs/4.1.1.7
+        patterns: "*.rpm"
+      register: scale_rpms
+
+    - name: Install RPMs
       dnf:
-        name: "/usr/lpp/mmfs/4.1.1.7/*.rpm"
-        disable_gpg_check: yes
+        name: "{{ scale_rpms.files | map(attribute='path') | list }}"
         state: present
