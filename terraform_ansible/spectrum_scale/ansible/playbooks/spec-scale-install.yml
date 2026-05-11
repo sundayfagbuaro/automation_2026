@@ -1,10 +1,9 @@
 ---
-- name: Copy Spectrum Scale installer to nodes
+- name: Spectrum Scale installation on the nodes
   hosts: scale
   become: yes
 
   tasks:
-
     - name: Create staging directory
       file:
         path: /root/scale_install
@@ -27,7 +26,7 @@
         dest: /root/scale_install/
         remote_src: yes
       
-    - name: Run Spectrum Scale installer extraction # This extract the rpm files into /usr/lpp/mmfs/4.1.1.7
+    - name: Extract the installer # This extract the rpm files into /usr/lpp/mmfs/4.1.1.7
       shell: |
         cd /root/scale_install
         ./Spectrum_Scale_Advanced-4.1.1.7-x86_64-Linux-install --silent
@@ -49,7 +48,7 @@
 #        disable_gpg_check: yes
 #        state: present
     
-    - name: Find RPMs
+    - name: Find RPMs to install
       find:
         paths: /usr/lpp/mmfs/4.1.1.7
         patterns: "*.rpm"
