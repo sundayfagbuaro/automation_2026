@@ -50,7 +50,7 @@
     
     - name: Find RPMs to install
       find:
-        paths: /usr/lpp/mmfs/5.2.3.7
+        paths: /usr/lpp/mmfs/5.2.3.7/gpfs_rpms
         patterns: "*.rpm"
       register: scale_rpms
 
