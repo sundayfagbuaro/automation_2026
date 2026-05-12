@@ -6,13 +6,49 @@
       hostname:
         name: "{{ inventory_hostname }}"
 
-    - name: Update /etc/hosts
-      blockinfile:
-        path: /etc/hosts
-        block: |
+#    - name: Update /etc/hosts
+#        path: /etc/hosts
+#      blockinfile:
+#        block: |
+#          {{ hostvars[host]['ansible_host'] }} {{ host }}
+#          {% for host in groups['scale'] %}
+#          {% endfor %}
+
+    - name: Disable IPv6 (sysctl config)
+      become: yes
+      ansible.builtin.copy:
+        dest: /etc/sysctl.d/99-disable-ipv6.conf
+        mode: '0644'
+        content: |
+          net.ipv6.conf.all.disable_ipv6 = 1
+          net.ipv6.conf.default.disable_ipv6 = 1
+          net.ipv6.conf.lo.disable_ipv6 = 1
+
+    - name: Reload sysctl settings
+      become: yes
+      ansible.builtin.command: sysctl --system
+      changed_when: false
+    
+    - name: Build clean /etc/hosts (IPv4 only)
+      become: yes
+      copy:
+        dest: /etc/hosts
+        content: |
+          127.0.0.1 localhost
+
           {% for host in groups['scale'] %}
           {{ hostvars[host]['ansible_host'] }} {{ host }}
           {% endfor %}
+    
+    - name: Read /etc/hosts
+      become: yes
+      ansible.builtin.slurp:
+        src: /etc/hosts
+      register: etc_hosts
+
+    - name: Show /etc/hosts content
+      ansible.builtin.debug:
+        msg: "{{ etc_hosts.content | b64decode }}"
 
     - name: Install packages
       dnf:
@@ -20,6 +56,7 @@
           - firewalld
           - python3
           - vim
+          - nmap-ncat
         state: present
 
 #    - name: Ensure ssh key exists
@@ -28,3 +65,18 @@
 #        generate_ssh_key: yes
 #        ssh_key_bits: 4096
 #        ssh_key_file: .ssh/id_rsa
+
+    - name: Ensure firewalld is running
+      become: yes
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+    
+    - name: Open GPFS CCR port 1191/tcp
+      become: yes
+      ansible.posix.firewalld:
+       port: 1191/tcp
+        permanent: true
+        state: enabled
+        immediate: true
