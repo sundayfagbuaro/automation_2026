@@ -14,16 +14,22 @@
 
     - name: Copy Spectrum Scale package
       copy:
-        src: /home/bobosunne/packages/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
-        dest: /root/scale_install/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
+        src: /home/bobosunne/packages/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
+        dest: /root/scale_install/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
         owner: root
         group: root
         mode: '0644'
+    
+    - name: Extract Spectrum Scale installer
+      unarchive:
+        src: /root/scale_install/IBM_SPECTRUM_SCALE_ADVANCED_4.1.1.tar.gz
+        dest: /root/scale_install/
+        remote_src: yes
       
-    - name: Extract the installer # This extract the rpm files into /usr/lpp/mmfs/5.2.3.7
+    - name: Extract the installer # This extract the rpm files into /usr/lpp/mmfs/4.1.1.7
       shell: |
         cd /root/scale_install
-        ./Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install --silent
+        ./Spectrum_Scale_Advanced-4.1.1.7-x86_64-Linux-install --silent
 
     - name: Install prerequisite packages for spectrum Scale RPMs
       dnf:
@@ -38,13 +44,13 @@
 
 #    - name: Install Spectrum Scale RPMs
 #      dnf:
-#        name: "/usr/lpp/mmfs/5.2.3.7/*.rpm"
+#        name: "/usr/lpp/mmfs/4.1.1.7/*.rpm"
 #        disable_gpg_check: yes
 #        state: present
     
     - name: Find RPMs to install
       find:
-        paths: /usr/lpp/mmfs/5.2.3.7
+        paths: /usr/lpp/mmfs/4.1.1.7
         patterns: "*.rpm"
       register: scale_rpms
 
