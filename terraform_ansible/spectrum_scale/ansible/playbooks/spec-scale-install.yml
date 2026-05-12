@@ -18,7 +18,13 @@
         dest: /root/scale_install/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
         owner: root
         group: root
-        mode: '0644'
+        mode: '0755'
+    
+    - name: Ensure installer is executable
+      file:
+        path: /root/scale_install/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
+        mode: '0755'
+        state: file
       
     - name: Extract the installer # This extract the rpm files into /usr/lpp/mmfs/5.2.3.7
       shell: |
