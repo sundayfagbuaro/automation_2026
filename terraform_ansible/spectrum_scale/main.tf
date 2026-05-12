@@ -16,7 +16,7 @@ resource "proxmox_vm_qemu" "vm" {
 
   cores   = 2
   sockets = 1
-  memory  = 2048
+  memory  = 4096
 
   scsihw = "virtio-scsi-pci"
 
