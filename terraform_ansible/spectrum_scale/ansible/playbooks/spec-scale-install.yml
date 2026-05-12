@@ -54,7 +54,20 @@
         patterns: "*.rpm"
       register: scale_rpms
 
-    - name: Install RPMs
+#    - name: Install RPMs
+#      dnf:
+#        name: "{{ scale_rpms.files | map(attribute='path') | list }}"
+#        state: present
+    
+    - name: Install Storage Scale RPMs excluding GUI
       dnf:
-        name: "{{ scale_rpms.files | map(attribute='path') | list }}"
+        name: >-
+          {{
+            scale_rpms.files
+            | map(attribute='path')
+            | reject('search', 'gpfs.gui')
+            | reject('search', 'pmcollector')
+            | list
+          }}
         state: present
+        disable_gpg_check: true
