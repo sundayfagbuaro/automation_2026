@@ -48,6 +48,14 @@
     - name: Show cluster status
       ansible.builtin.debug:
         var: cluster_status.stdout_lines
+    
+    - name: Wait for GPFS nodes to become active
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmgetstate -a
+      register: gpfs_state
+      changed_when: false
+      retries: 12
+      delay: 10
+      until: "'active' in gpfs_state.stdout | lower"
 
     # -----------------------------
     # 5. Fail fast if GPFS is not active
