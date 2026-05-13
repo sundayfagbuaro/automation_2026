@@ -4,7 +4,8 @@ resource "proxmox_vm_qemu" "vm" {
   target_node = var.target_node
   clone       = var.template_name
   full_clone  = true
-  
+
+  vmid        = 200 + count.index
   agent                  = 1
   define_connection_info = true
   ci_wait                = 60
