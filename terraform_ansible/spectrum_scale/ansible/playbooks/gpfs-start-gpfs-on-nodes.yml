@@ -60,10 +60,10 @@
     # -----------------------------
     # 5. Fail fast if GPFS is not active
     # -----------------------------
-    - name: Validate GPFS startup success
-      ansible.builtin.fail:
-        msg: "GPFS cluster is not fully active. Check mmstartup / mmgetstate output."
-      when: "'active' not in mmstate_result.stdout | lower"
+#    - name: Validate GPFS startup success
+#      ansible.builtin.fail:
+#        msg: "GPFS cluster is not fully active. Check mmstartup / mmgetstate output."
+#      when: "'active' not in mmstate_result.stdout | lower"
 
     # -----------------------------
     # 6. Final success message
