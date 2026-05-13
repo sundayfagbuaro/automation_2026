@@ -29,7 +29,7 @@ resource "proxmox_vm_qemu" "vm" {
 
   # Additional disk
   disk {
-    slot    = "2"
+    slot    = "scsi1"
     type    = "disk"
     storage = "local-lvm"
     size    = "25G"
