@@ -12,6 +12,13 @@ resource "proxmox_vm_qemu" "vm" {
   cipassword = "password"
   sshkeys    = file("/home/bobosunne/.ssh/id_rsa.pub")
 
+  disk {
+  slot    = 1
+  size    = "20G"
+  type    = "scsi"
+  storage = "local-lvm"
+}
+
   os_type = "cloud-init"
 
   cores   = 2
