@@ -84,10 +84,11 @@
         state: present
         disable_gpg_check: true
     
-    - name: Check if GPFS license is already accepted
-      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlslicense -N all
+    - name: Get GPFS license status
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlslicense -L
       register: license_check
       changed_when: false
+      failed_when: false
 
     - name: Accept GPFS license (if needed)
       ansible.builtin.command: /usr/lpp/mmfs/bin/mmchlicense server --accept -N all
