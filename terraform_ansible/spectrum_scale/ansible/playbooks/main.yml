@@ -5,3 +5,4 @@
 - import_playbook: distribute_controller_ssh_keys.yml
 - import_playbook: distribute_ssh_key_for_root_user.yml
 - import_playbook: spec-scale-install.yml
+- import_playbook: create-gpfs-cluster.yml
