@@ -1,0 +1,65 @@
+---
+- name: Start IBM Storage Scale (GPFS) cluster
+  hosts: scale-node-1
+  become: yes
+  gather_facts: yes
+
+  tasks:
+
+    # -----------------------------
+    # 1. Start GPFS on all nodes
+    # -----------------------------
+    - name: Start GPFS cluster
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmstartup -a
+      register: mmstartup_result
+      failed_when: mmstartup_result.rc != 0
+
+    - name: Show mmstartup output
+      ansible.builtin.debug:
+        var: mmstartup_result.stdout_lines
+
+    # -----------------------------
+    # 2. Wait for cluster stabilization
+    # -----------------------------
+    - name: Wait for GPFS to stabilize
+      ansible.builtin.pause:
+        seconds: 20
+
+    # -----------------------------
+    # 3. Check GPFS node state
+    # -----------------------------
+    - name: Get GPFS node state
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmgetstate -a
+      register: mmstate_result
+      changed_when: false
+
+    - name: Show GPFS node state
+      ansible.builtin.debug:
+        var: mmstate_result.stdout_lines
+
+    # -----------------------------
+    # 4. Validate cluster health
+    # -----------------------------
+    - name: Get cluster status
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlscluster
+      register: cluster_status
+      changed_when: false
+
+    - name: Show cluster status
+      ansible.builtin.debug:
+        var: cluster_status.stdout_lines
+
+    # -----------------------------
+    # 5. Fail fast if GPFS is not active
+    # -----------------------------
+    - name: Validate GPFS startup success
+      ansible.builtin.fail:
+        msg: "GPFS cluster is not fully active. Check mmstartup / mmgetstate output."
+      when: "'active' not in mmstate_result.stdout | lower"
+
+    # -----------------------------
+    # 6. Final success message
+    # -----------------------------
+    - name: Cluster is healthy
+      ansible.builtin.debug:
+        msg: "GPFS cluster started successfully and is active"

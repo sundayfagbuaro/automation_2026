@@ -1,0 +1,135 @@
+---
+- name: Spectrum Scale installation on the nodes
+  hosts: scale
+  become: yes
+
+  tasks:
+    - name: Create staging directory
+      file:
+        path: /root/scale_install
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy Spectrum Scale package
+      copy:
+        src: /home/bobosunne/packages/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
+        dest: /root/scale_install/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
+        owner: root
+        group: root
+        mode: '0755'
+    
+    - name: Ensure installer is executable
+      file:
+        path: /root/scale_install/Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install
+        mode: '0755'
+        state: file
+      
+    - name: Extract the installer # This extract the rpm files into /usr/lpp/mmfs/5.2.3.7
+      shell: |
+        cd /root/scale_install
+        ./Storage_Scale_Standard-5.2.3.7-x86_64-Linux-install --silent
+
+    - name: Show current kernel
+      ansible.builtin.debug:
+        msg: "Running kernel: {{ ansible_kernel }}"
+    
+    - name: Install GPFS kernel build dependencies
+      ansible.builtin.dnf:
+        name:
+          - "kernel-devel-{{ ansible_kernel }}"
+          - "kernel-headers-{{ ansible_kernel }}"
+          - gcc
+          - cpp
+          - gcc-c++
+          - make
+          - elfutils-libelf-devel
+          - binutils
+        state: present
+
+    - name: Ensure required tools are installed
+      ansible.builtin.package:
+        name:
+          - perl
+          - ksh
+          - libaio
+        state: present
+
+    - name: Verify kernel-devel package installed
+      ansible.builtin.command: rpm -q kernel-devel-{{ ansible_kernel }}
+      register: kernel_devel_check
+      changed_when: false
+
+    - name: Display kernel-devel verification
+      ansible.builtin.debug:
+        var: kernel_devel_check.stdout
+    
+    - name: Find RPMs to install
+      find:
+        paths: /usr/lpp/mmfs/5.2.3.7/gpfs_rpms
+        patterns: "*.rpm"
+      register: scale_rpms
+    
+    - name: Install Storage Scale RPMs excluding GUI
+      dnf:
+        name: >-
+          {{
+            scale_rpms.files
+            | map(attribute='path')
+            | reject('search', 'gpfs.gui')
+            | reject('search', 'pmcollector')
+            | list
+          }}
+        state: present
+        disable_gpg_check: true
+    
+    - name: Check if GPFS license is already accepted
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlslicense -N all
+      register: license_check
+      changed_when: false
+
+    - name: Accept GPFS license (if needed)
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmchlicense server --accept -N all
+      when: "'NOT ACCEPTED' in license_check.stdout"
+
+
+    ######
+    - name: Check mmfs binary exists
+      ansible.builtin.stat:
+        path: /usr/lpp/mmfs/bin/mmstartup
+      register: mmfs_binary
+
+    - name: Fail if GPFS is not installed
+      ansible.builtin.fail:
+        msg: "GPFS binaries not found - installation failed"
+      when: not mmfs_binary.stat.exists
+
+    # -----------------------------
+    # 4. Build GPFS kernel module
+    # -----------------------------
+    - name: Run mmbuildgpl (build kernel module)
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmbuildgpl
+      register: gpl_build
+      changed_when: true
+
+    - name: Show mmbuildgpl output
+      ansible.builtin.debug:
+        var: gpl_build.stdout_lines
+
+    # -----------------------------
+    # 5. Validate kernel module
+    # -----------------------------
+    - name: Check GPFS kernel module exists
+      ansible.builtin.stat:
+        path: "/lib/modules/{{ ansible_kernel }}/extra/mmfslinux.ko"
+      register: gpfs_module
+
+    - name: Fail if GPFS kernel module is missing
+      ansible.builtin.fail:
+        msg: "mmfslinux.ko was NOT built successfully"
+      when: not gpfs_module.stat.exists
+
+    - name: Confirm GPFS kernel module location
+      ansible.builtin.debug:
+        msg: "GPFS kernel module built successfully: {{ gpfs_module.stat.path }}"

@@ -1,8 +1,9 @@
 ---
-- import_playbook: ping.yml
+#- import_playbook: ping.yml
 #- import_playbook: setup-ssh.yml
 - import_playbook: config.yml
 - import_playbook: distribute_controller_ssh_keys.yml
 - import_playbook: distribute_ssh_key_for_root_user.yml
-- import_playbook: spec-scale-install.yml
-- import_playbook: create-gpfs-cluster.yml
+- import_playbook: gpfs-install.yml
+- import_playbook: gpfs-create-cluster.yml
+- import_playbook: gpfs-start-gpfs-on-nodes.yml
