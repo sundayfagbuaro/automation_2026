@@ -7,3 +7,4 @@
 - import_playbook: gpfs-install.yml
 - import_playbook: gpfs-create-cluster.yml
 - import_playbook: gpfs-start-gpfs-on-nodes.yml
+- import_playbook: gpfs-create-nsd-and-filesystem.yml
