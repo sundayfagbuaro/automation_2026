@@ -1,0 +1,156 @@
+---
+- name: Create NSDs and GPFS filesystem
+  hosts: scale-node-1
+  become: yes
+  gather_facts: yes
+
+  vars:
+    nsd_file: /root/nsd.txt
+    filesystem_name: gpfs0
+    mount_point: /gpfs0
+
+  tasks:
+
+    # ---------------------------------------------------
+    # 1. Verify GPFS cluster is active
+    # ---------------------------------------------------
+    - name: Check GPFS cluster state
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmgetstate -a
+      register: gpfs_state
+      changed_when: false
+
+    - name: Display GPFS state
+      ansible.builtin.debug:
+        var: gpfs_state.stdout_lines
+
+    - name: Ensure all nodes are active
+      ansible.builtin.fail:
+        msg: "GPFS cluster is not fully active"
+      when: "gpfs_state.stdout.count('active') < 3"
+
+    # ---------------------------------------------------
+    # 2. Create NSD definition file
+    # ---------------------------------------------------
+    - name: Create NSD definition file
+      ansible.builtin.copy:
+        dest: "{{ nsd_file }}"
+        mode: '0644'
+        content: |
+          %nsd:
+            device=/dev/sdb
+            nsd=nsd1
+            servers=scale-node-1
+            usage=dataAndMetadata
+            failureGroup=1
+
+          %nsd:
+            device=/dev/sdb
+            nsd=nsd2
+            servers=scale-node-2
+            usage=dataAndMetadata
+            failureGroup=2
+
+          %nsd:
+            device=/dev/sdb
+            nsd=nsd3
+            servers=scale-node-3
+            usage=dataAndMetadata
+            failureGroup=3
+
+    - name: Show NSD file content
+      ansible.builtin.command: cat {{ nsd_file }}
+      register: nsd_content
+      changed_when: false
+
+    - name: Display NSD file
+      ansible.builtin.debug:
+        var: nsd_content.stdout_lines
+
+    # ---------------------------------------------------
+    # 3. Verify disks exist on all nodes
+    # ---------------------------------------------------
+    - name: Verify /dev/sdb exists on all nodes
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmdsh -N all lsblk /dev/sdb
+      register: disk_check
+      changed_when: false
+
+    - name: Show disk verification
+      ansible.builtin.debug:
+        var: disk_check.stdout_lines
+
+    # ---------------------------------------------------
+    # 4. Create NSDs
+    # ---------------------------------------------------
+    - name: Create GPFS NSDs
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmcrnsd -F {{ nsd_file }}
+      register: nsd_create
+
+    - name: Show NSD creation output
+      ansible.builtin.debug:
+        var: nsd_create.stdout_lines
+
+    # ---------------------------------------------------
+    # 5. Verify NSDs
+    # ---------------------------------------------------
+    - name: List NSDs
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlsnsd
+      register: nsd_list
+      changed_when: false
+
+    - name: Display NSD list
+      ansible.builtin.debug:
+        var: nsd_list.stdout_lines
+
+    # ---------------------------------------------------
+    # 6. Create filesystem
+    # ---------------------------------------------------
+    - name: Create GPFS filesystem
+      ansible.builtin.command: >
+        /usr/lpp/mmfs/bin/mmcrfs
+        {{ filesystem_name }}
+        -F {{ nsd_file }}
+        -A yes
+        -Q yes
+      register: fs_create
+
+    - name: Show filesystem creation output
+      ansible.builtin.debug:
+        var: fs_create.stdout_lines
+
+    # ---------------------------------------------------
+    # 7. Mount filesystem on all nodes
+    # ---------------------------------------------------
+    - name: Mount GPFS filesystem
+      ansible.builtin.command: >
+        /usr/lpp/mmfs/bin/mmmount
+        {{ filesystem_name }}
+        -a
+      register: mount_result
+
+    - name: Show mount output
+      ansible.builtin.debug:
+        var: mount_result.stdout_lines
+
+    # ---------------------------------------------------
+    # 8. Verify filesystem mount
+    # ---------------------------------------------------
+    - name: Verify filesystem is mounted
+      ansible.builtin.command: df -h
+      register: df_output
+      changed_when: false
+
+    - name: Display mounted filesystems
+      ansible.builtin.debug:
+        var: df_output.stdout_lines
+
+    # ---------------------------------------------------
+    # 9. Verify GPFS filesystem details
+    # ---------------------------------------------------
+    - name: List GPFS filesystems
+      ansible.builtin.command: /usr/lpp/mmfs/bin/mmlsfs all
+      register: fs_list
+      changed_when: false
+
+    - name: Display GPFS filesystem information
+      ansible.builtin.debug:
+        var: fs_list.stdout_lines
