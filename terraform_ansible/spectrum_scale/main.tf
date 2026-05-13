@@ -35,6 +35,13 @@ resource "proxmox_vm_qemu" "vm" {
 #    size    = "25G"
 #  }
 
+  provisioner "local-exec" {
+    command = <<EOT
+ssh root@${var.target_node} \
+"qm set ${self.vmid} --scsi1 local-lvm:25"
+EOT
+  }
+
 }
 
 resource "null_resource" "run_ansible" {
