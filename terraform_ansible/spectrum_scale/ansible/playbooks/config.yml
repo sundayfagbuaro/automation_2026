@@ -76,7 +76,7 @@
     - name: Open GPFS CCR port 1191/tcp
       become: yes
       ansible.posix.firewalld:
-       port: 1191/tcp
+        port: 1191/tcp
         permanent: true
         state: enabled
         immediate: true
