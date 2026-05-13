@@ -28,12 +28,12 @@ resource "proxmox_vm_qemu" "vm" {
   ipconfig0 = "ip=dhcp"
 
   # Additional disk
-  disk {
-    slot    = 1
-    type    = "disk"
-    storage = "local-lvm"
-    size    = "25G"
-  }
+#  disk {
+#    slot    = 1
+#    type    = "disk"
+#    storage = "local-lvm"
+#    size    = "25G"
+#  }
 
 }
 
