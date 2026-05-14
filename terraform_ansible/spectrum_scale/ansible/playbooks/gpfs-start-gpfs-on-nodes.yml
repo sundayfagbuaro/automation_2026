@@ -53,7 +53,7 @@
       ansible.builtin.command: /usr/lpp/mmfs/bin/mmgetstate -a
       register: gpfs_state
       changed_when: false
-      retries: 12
+      retries: 30
       delay: 10
       until: "'active' in gpfs_state.stdout | lower"
 
