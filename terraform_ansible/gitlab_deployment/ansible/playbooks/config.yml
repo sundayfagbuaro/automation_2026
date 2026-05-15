@@ -1,0 +1,52 @@
+---
+- hosts: scale
+  become: true
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+
+    - name: Disable IPv6 (sysctl config)
+      become: yes
+      ansible.builtin.copy:
+        dest: /etc/sysctl.d/99-disable-ipv6.conf
+        mode: '0644'
+        content: |
+          net.ipv6.conf.all.disable_ipv6 = 1
+          net.ipv6.conf.default.disable_ipv6 = 1
+          net.ipv6.conf.lo.disable_ipv6 = 1
+
+    - name: Reload sysctl settings
+      become: yes
+      ansible.builtin.command: sysctl --system
+      changed_when: false
+    
+    - name: Build clean /etc/hosts (IPv4 only)
+      become: yes
+      copy:
+        dest: /etc/hosts
+        content: |
+          127.0.0.1 localhost
+
+          {% for host in groups['gitlab'] %}
+          {{ hostvars[host]['ansible_host'] }} {{ host }}
+          {% endfor %}
+    
+    - name: Read /etc/hosts
+      become: yes
+      ansible.builtin.slurp:
+        src: /etc/hosts
+      register: etc_hosts
+
+    - name: Show /etc/hosts content
+      ansible.builtin.debug:
+        msg: "{{ etc_hosts.content | b64decode }}"
+
+    - name: Install packages
+      dnf:
+        name:
+          - firewalld
+          - python3
+          - vim
+          - nmap-ncat
+        state: present
