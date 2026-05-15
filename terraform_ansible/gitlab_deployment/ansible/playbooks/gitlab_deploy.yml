@@ -1,13 +1,12 @@
 ---
-- name: Install GitLab CE
+- name: Install GitLab CE on Rocky Linux
   hosts: gitlab
   become: true
 
   vars:
-    gitlab_external_url: "http://gitlab.sunny.lab"
+    gitlab_external_url: "https://gitlab.lab.local"
 
- tasks:
-
+  tasks:
     - name: Update system packages
       dnf:
         name: "*"
