@@ -7,10 +7,15 @@
     gitlab_external_url: "http://gitlab.sunny.lab"
 
   tasks:
-    - name: Update system packages
+    - name: Ensure base dependencies only
       dnf:
-        name: "*"
-        state: latest
+        name:
+          - curl
+          - ca-certificates
+          - openssh-server
+          - perl
+        state: present
+        update_cache: yes
 
     - name: Install dependencies
       dnf:
