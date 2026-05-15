@@ -1,9 +1,17 @@
 resource "proxmox_vm_qemu" "vm" {
-  count       = 1
+  count       = 3
   name        = var.vm_name
   target_node = var.target_node
   clone       = var.template_name
   full_clone  = true
+
+#  vmid        = 700 + count.index
+  agent                  = 1
+  define_connection_info = true
+  ci_wait                = 60
+  ciuser = "bobosunne"
+  cipassword = "password"
+  sshkeys    = file("/home/bobosunne/.ssh/id_rsa.pub")
 
   os_type = "cloud-init"
 
@@ -19,6 +27,21 @@ resource "proxmox_vm_qemu" "vm" {
   }
 
   ipconfig0 = "ip=dhcp"
+
+  # Additional disk
+#  disk {
+#    slot    = 1
+#    type    = "disk"
+#    storage = "local-lvm"
+#    size    = "25G"
+#  }
+
+#  provisioner "local-exec" {
+#    command = <<EOT
+#"qm set ${self.vmid} --scsi1 local-lvm:25"
+#EOT
+#ssh root@${var.target_node} \
+#  }
 
 }
 
