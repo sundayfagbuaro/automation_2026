@@ -1,0 +1,2 @@
+---
+- import_playbook: gitlab_deploy.yml
