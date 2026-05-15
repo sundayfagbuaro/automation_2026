@@ -6,55 +6,57 @@
   vars:
     gitlab_external_url: "http://gitlab.sunny.lab"
 
-  tasks:
+ tasks:
 
-    - name: Update apt cache
-      apt:
+    - name: Update system packages
+      dnf:
+        name: "*"
+        state: latest
         update_cache: yes
-        cache_valid_time: 3600
 
     - name: Install dependencies
-      apt:
+      dnf:
         name:
           - curl
+          - policycoreutils
           - openssh-server
-          - ca-certificates
-          - tzdata
           - perl
+          - postfix
         state: present
 
-    - name: Install postfix (optional)
-      apt:
+    - name: Enable SSH service
+      service:
+        name: sshd
+        state: started
+        enabled: true
+
+    - name: Enable postfix
+      service:
         name: postfix
-        state: present
+        state: started
+        enabled: true
 
-    - name: Download GitLab repository script
-      get_url:
-        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
-        dest: /tmp/gitlab_install.sh
-        mode: '0755'
-
-    - name: Run GitLab repository setup
-      command: /tmp/gitlab_install.sh
+    - name: Add GitLab CE repository (RPM)
+      shell: |
+        curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | bash
       args:
-        creates: /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+        creates: /etc/yum.repos.d/gitlab_gitlab-ce.repo
 
     - name: Install GitLab CE
       environment:
         EXTERNAL_URL: "{{ gitlab_external_url }}"
-      apt:
+      dnf:
         name: gitlab-ce
         state: present
-        update_cache: yes
 
-    - name: Ensure GitLab is configured
+    - name: Reconfigure GitLab
       command: gitlab-ctl reconfigure
 
-    - name: Ensure GitLab is running
+    - name: Check GitLab status
       command: gitlab-ctl status
       register: gitlab_status
       changed_when: false
 
-    - name: Show GitLab status
+    - name: Show status
       debug:
         var: gitlab_status.stdout_lines
