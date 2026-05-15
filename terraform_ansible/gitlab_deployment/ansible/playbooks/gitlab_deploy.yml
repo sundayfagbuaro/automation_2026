@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    gitlab_external_url: "http://gitlab.sunny.lab"
+    gitlab_external_url: "http://{{ ansible_host }}"
 
   tasks:
     - name: Ensure base dependencies only
