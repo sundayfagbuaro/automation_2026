@@ -1,5 +1,5 @@
 ---
-- hosts: scale
+- hosts: gitlab
   become: true
   tasks:
     - name: Set hostname
