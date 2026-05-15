@@ -1,0 +1,60 @@
+---
+- name: Install GitLab CE
+  hosts: gitlab
+  become: true
+
+  vars:
+    gitlab_external_url: "http://gitlab.sunny.lab"
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install dependencies
+      apt:
+        name:
+          - curl
+          - openssh-server
+          - ca-certificates
+          - tzdata
+          - perl
+        state: present
+
+    - name: Install postfix (optional)
+      apt:
+        name: postfix
+        state: present
+
+    - name: Download GitLab repository script
+      get_url:
+        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh
+        dest: /tmp/gitlab_install.sh
+        mode: '0755'
+
+    - name: Run GitLab repository setup
+      command: /tmp/gitlab_install.sh
+      args:
+        creates: /etc/apt/sources.list.d/gitlab_gitlab-ce.list
+
+    - name: Install GitLab CE
+      environment:
+        EXTERNAL_URL: "{{ gitlab_external_url }}"
+      apt:
+        name: gitlab-ce
+        state: present
+        update_cache: yes
+
+    - name: Ensure GitLab is configured
+      command: gitlab-ctl reconfigure
+
+    - name: Ensure GitLab is running
+      command: gitlab-ctl status
+      register: gitlab_status
+      changed_when: false
+
+    - name: Show GitLab status
+      debug:
+        var: gitlab_status.stdout_lines
