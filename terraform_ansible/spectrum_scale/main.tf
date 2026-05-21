@@ -5,13 +5,13 @@ resource "proxmox_vm_qemu" "vm" {
   clone       = var.template_name
   full_clone  = true
 
-  vmid        = 700 + count.index
+  vmid        = 900 + count.index
   agent                  = 1
   define_connection_info = true
   ci_wait                = 60
   ciuser = "bobosunne"
   cipassword = "password"
-  sshkeys    = file("/home/bobosunne/.ssh/id_rsa.pub")
+#  sshkeys    = file("/home/bobosunne/.ssh/id_rsa.pub")
 
   os_type = "cloud-init"
 

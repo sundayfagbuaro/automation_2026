@@ -1,0 +1,4 @@
+[servers]
+%{ for vm in vms ~}
+${vm.name} ansible_host=${vm.ip}
+%{ endfor ~}
